@@ -14,7 +14,7 @@ class Main {
     fun numb(n: Int): Int = numbNumb(n,0, 1)
 
     //максимальная цифра числа рекурсией вниз
-    fun maxxDown(x: Int, a: Int): Int = if(x%10 == 0) if(a < x) x else a else if (x%10 < a) maxx(x/10, a) else  maxx(x/10, x%10)
+    fun maxxDown(x: Int, a: Int): Int = if(x < 10) if(a < x) x else a else if (x%10 < a) maxxDown(x/10, a) else  maxxDown(x/10, x%10)
     fun maxDown(x: Int): Int = maxxDown(x, 0)
 
     //максимальная цифра числа рекурсией вверх
