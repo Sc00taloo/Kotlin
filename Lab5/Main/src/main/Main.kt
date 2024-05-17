@@ -1,5 +1,8 @@
 import java.lang.System.`in`
 import java.util.*
+import kotlin.system.measureTimeMillis
+import kotlin.math.sqrt
+import kotlin.math.ceil
 
 class Main {
     //максимальная цифра числа
@@ -63,4 +66,51 @@ class Main {
     //находит делитель числа, являющийся взаимно простым с наибольшим количеством цифр данного числа
     fun maxCopDivv(n: Int, i: Int, best: Int, maxc: Int): Int = if (n < i) best else if (n % i == 0 && digits(i).count { nod(n, it) == 1 } > maxc) maxCopDivv(n,i+1, i, digits(i).count { nod(n, it) == 1 }) else maxCopDivv(n,i+1, best, maxc)
     fun maxCopDiv(n: Int): Int = maxCopDivv(n,1,1, 0)
+
+
+
+    tailrec fun getDivisors(num: Int, divisor: Int = 2, total: Int = 1): Int {
+        if (divisor > sqrt(num.toDouble())) return total
+        val newTotal = if (num % divisor == 0) {
+            total + divisor + if (divisor != num / divisor) num / divisor else 0
+        } else total
+        return getDivisors(num, divisor + 1, newTotal)
+    }
+
+    // Функция для проверки, является ли число избыточным
+    fun isAbundant(num: Int): Boolean {
+        return getDivisors(num) > num
+    }
+
+    // Функция для проверки, можно ли представить число как сумму двух избыточных чисел
+    fun canBeWrittenAsSumOfTwoAbundants(n: Int, limit: Int, abundentCheck: (Int) -> Boolean): Boolean {
+        tailrec fun check(a: Int): Boolean {
+            if (a > n / 2) return false
+            return if (abundentCheck(a) && abundentCheck(n - a)) true else check(a + 1)
+        }
+        return check(12)
+    }
+
+    // Основная функция для подсчета чисел, которые нельзя представить как сумму двух избыточных чисел
+    fun countNonSummableNumbers(limit: Int): Int {
+        fun isAbundantCached(num: Int, cache: Map<Int, Boolean> = emptyMap()): Pair<Boolean, Map<Int, Boolean>> {
+            return cache[num]?.let { it to cache } ?: isAbundant(num).let { it to cache + (num to it) }
+        }
+
+        tailrec fun helper(current: Int, total: Int, cache: Map<Int, Boolean>): Int {
+            if (current > limit) return total
+            val (isCurrentAbundant, newCache) = isAbundantCached(current, cache)
+            val sumOfTwoAbundants = canBeWrittenAsSumOfTwoAbundants(current, limit) { isAbundantCached(it, newCache).first }
+            val newTotal = if (!sumOfTwoAbundants) total + current else total
+            return helper(current + 1, newTotal, newCache)
+        }
+        return helper(1, 0, emptyMap())
+    }
+
+    // Запуск программы
+    fun main() {
+        val limit = 20000
+        val result = countNonSummableNumbers(limit)
+        println("Количество чисел меньше $limit, которые нельзя представить в виде суммы двух избыточных чисел: $result")
+    }
 }

@@ -127,4 +127,10 @@ internal class Test {
         val expected1 = 1
         assertEquals(expected1, main.maxCopDiv(9))
     }
+
+    @Test
+    fun main() {
+        val main = Main()
+        main.main()
+    }
 }
