@@ -34,4 +34,20 @@ class Main {
     //кол-во делителей числа рекурсией вверх
     fun numbUpp(x: Int, k: Int): Int = if (k > x) 0 else (if (x % k == 0) 1 + numbUpp(x, k+1) else 0 + numbUpp(x, k+1))
     fun numbUp(x: Int): Int = numbUpp(x,1)
+
+    //функция высшего порядка принимает функцию
+    tailrec fun digits(x: Int, a: Int, f: (Int, Int) -> Int): Int =
+        if (x % 10 == 0) a else digits(x / 10, f(a, x % 10), f)
+
+    //функция для подсчета максимальной цифры числа
+    fun maxd(n: Int): Int = digits(n,0) {a, b -> if (a>b) a else b}
+    //функция для подсчета суммы цифр числа делящихся на 3
+    fun sum3d(n: Int): Int = digits(n,0) {a,b -> if (b%3 == 0) a+b else a}
+
+    //функция высшего порядка принимает функцию
+    tailrec fun countDivisors(n: Int, x: Int, a: Int, f: (Int, Int) -> Int): Int =
+        if (x > n) a else countDivisors(n, x + 1, f(a, x), f)
+
+    //функция для подсчета кол-во делителей числа
+    fun numbd(n: Int): Int = countDivisors(n, 1, 0) { a, b -> if (n % b == 0) a + 1 else a }
 }

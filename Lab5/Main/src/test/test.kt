@@ -64,4 +64,25 @@ internal class Test {
         val expected = 8
         assertEquals(expected, main.numbUp(24))
     }
+
+    @Test
+    fun maxd() {
+        val main = Main()
+        val expected = 9
+        assertEquals(expected, main.maxd(923745))
+    }
+
+    @Test
+    fun sum3d() {
+        val main = Main()
+        val expected = 18
+        assertEquals(expected, main.sum3d(32345686))
+    }
+
+    @Test
+    fun numbd() {
+        val main = Main()
+        val expected = 1
+        assertEquals(expected, main.numbd(1))
+    }
 }
