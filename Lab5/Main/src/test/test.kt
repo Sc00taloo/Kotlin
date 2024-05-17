@@ -109,4 +109,22 @@ internal class Test {
         val expected1 = 4
         assertEquals(expected1, main.numbd(15))
     }
+
+    @Test
+    fun countCoprimes() {
+        val main = Main()
+        val expected = 10
+        assertEquals(expected, main.countCoprimes(5))
+        val expected1 = 55
+        assertEquals(expected1, main.countCoprimes(11))
+    }
+
+    @Test
+    fun maxCopDiv() {
+        val main = Main()
+        val expected = 11
+        assertEquals(expected, main.maxCopDiv(44))
+        val expected1 = 1
+        assertEquals(expected1, main.maxCopDiv(9))
+    }
 }

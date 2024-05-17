@@ -50,4 +50,17 @@ class Main {
 
     //функция для подсчета кол-во делителей числа
     fun numbd(n: Int): Int = countDivisors(n, 1, 0) { a, b -> if (n % b == 0) a + 1 else a }
+
+
+
+    //НОД - проверяет на взаимную простоту
+    fun nod(a: Int, b: Int): Int = if (b == 0) a else nod(b, a%b)
+    //находти количество чисел, взаимно простых с заданным.
+    fun areCompire(n: Int, x: Int, k: Int, f: (Int, Int) -> Int): Int = if (n < x) k else if (nod(n,x) == 1) areCompire(n,x+1,f(k,x), f) else areCompire(n,x+1,k, f)
+    fun countCoprimes(n: Int): Int = areCompire(n,1, 0) {a,b -> a+b}
+
+    fun digits(x: Int): List<Int> = if (x < 10) listOf(x) else digits(x / 10) + (x % 10)
+    //находит делитель числа, являющийся взаимно простым с наибольшим количеством цифр данного числа
+    fun maxCopDivv(n: Int, i: Int, best: Int, maxc: Int): Int = if (n < i) best else if (n % i == 0 && digits(i).count { nod(n, it) == 1 } > maxc) maxCopDivv(n,i+1, i, digits(i).count { nod(n, it) == 1 }) else maxCopDivv(n,i+1, best, maxc)
+    fun maxCopDiv(n: Int): Int = maxCopDivv(n,1,1, 0)
 }
