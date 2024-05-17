@@ -1,0 +1,9 @@
+123 max 3
+456 sum3 6
+789 numb 4
+471742 maxDown 7
+111011101 maxUp 1
+12345668 sum3Up 15
+116116116 sum3Down 18
+24 numbDown 8
+10 numbUp 4
