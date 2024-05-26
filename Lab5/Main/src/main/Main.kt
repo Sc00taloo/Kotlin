@@ -1,14 +1,11 @@
 import java.lang.System.`in`
 import java.util.*
-import kotlin.system.measureTimeMillis
 import kotlin.math.sqrt
-import kotlin.math.ceil
 
 class Main {
     //максимальная цифра числа
     fun maxx(x: Int, a: Int): Int = if(x%10 == 0) if(a < x) x else a else if (x%10 < a) maxx(x/10, a) else  maxx(x/10, x%10)
     fun max(x: Int): Int = maxx(x, 0)
-
     //сумма цифр числа делящихся на 3
     fun sum3(n: Int): Int = if (n % 10 == 0) 0 else if ((n%10) % 3 == 0) n%10 + sum3(n/10) else sum3(n/10)
 
@@ -68,7 +65,7 @@ class Main {
     fun maxCopDiv(n: Int): Int = maxCopDivv(n,1,1, 0)
 
 
-
+    //продолжение функции для проверки, является ли число избыточным
     tailrec fun getDivisors(num: Int, divisor: Int = 2, total: Int = 1): Int {
         if (divisor > sqrt(num.toDouble())) return total
         val newTotal = if (num % divisor == 0) {
@@ -76,23 +73,21 @@ class Main {
         } else total
         return getDivisors(num, divisor + 1, newTotal)
     }
-
-    // Функция для проверки, является ли число избыточным
+    //функция для проверки, является ли число избыточным
     fun isAbundant(num: Int): Boolean {
         return getDivisors(num) > num
     }
-
-    // Функция для проверки, можно ли представить число как сумму двух избыточных чисел
-    fun canBeWrittenAsSumOfTwoAbundants(n: Int, limit: Int, abundentCheck: (Int) -> Boolean): Boolean {
+    //функция для проверки, можно ли представить число как сумму двух избыточных чисел
+    fun CBWASOTA(n: Int, limit: Int, abundentCheck: (Int) -> Boolean): Boolean {
         tailrec fun check(a: Int): Boolean {
             if (a > n / 2) return false
             return if (abundentCheck(a) && abundentCheck(n - a)) true else check(a + 1)
         }
         return check(12)
     }
-
-    // Основная функция для подсчета чисел, которые нельзя представить как сумму двух избыточных чисел
+    //основная функция для подсчета чисел, которые нельзя представить как сумму двух избыточных чисел
     fun countNonSummableNumbers(limit: Int): Int {
+        //если число num уже есть в кэше, функция возвращает пару значений, иначе если нет добавляет результат в кеш
         fun isAbundantCached(num: Int, cache: Map<Int, Boolean> = emptyMap()): Pair<Boolean, Map<Int, Boolean>> {
             return cache[num]?.let { it to cache } ?: isAbundant(num).let { it to cache + (num to it) }
         }
@@ -100,17 +95,17 @@ class Main {
         tailrec fun helper(current: Int, total: Int, cache: Map<Int, Boolean>): Int {
             if (current > limit) return total
             val (isCurrentAbundant, newCache) = isAbundantCached(current, cache)
-            val sumOfTwoAbundants = canBeWrittenAsSumOfTwoAbundants(current, limit) { isAbundantCached(it, newCache).first }
+            //может ли текущее число быть представлено как сумма двух избыточных чисел, используя функцию CBWASOTA
+            val sumOfTwoAbundants = CBWASOTA(current, limit) { isAbundantCached(it, newCache).first }
             val newTotal = if (!sumOfTwoAbundants) total + current else total
             return helper(current + 1, newTotal, newCache)
         }
         return helper(1, 0, emptyMap())
     }
 
-    // Запуск программы
     fun main() {
         val limit = 20000
         val result = countNonSummableNumbers(limit)
-        println("Количество чисел меньше $limit, которые нельзя представить в виде суммы двух избыточных чисел: $result")
+        println(result)
     }
 }
