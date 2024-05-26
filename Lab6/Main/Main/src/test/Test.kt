@@ -72,4 +72,38 @@ internal class Test {
         val test = intArrayOf(2,3,9,4,1,3,6,9,1,4,2)
         assertEquals(expected, main.betweenMax(test))
     }
+
+    @Test
+    fun numbAB() {
+        val main = Main()
+        val expected = 5
+        val test = intArrayOf(1,2,3,4,5,6,7,8,9,10)
+        val a = 3
+        val b = 7
+        assertEquals(expected, main.numbAB(test,a,b))
+    }
+
+    @Test
+    fun numbMin() {
+        val main = Main()
+        val expected = 4
+        val test = intArrayOf(1,1,5,3,1,6,3,7,1)
+        assertEquals(expected, main.numbMin(test))
+    }
+
+    @Test
+    fun averageMax() {
+        val main = Main()
+        val expected = listOf(6,7,8,9)
+        val test = listOf(1,2,3,4,5,6,7,8,9,10)
+        assertEquals(expected, main.averageMax(test))
+    }
+
+    @Test
+    fun numbAverage() {
+        val main = Main()
+        val expected = 11.666666666666666
+        val test = listOf(2,3,5,8,11,12,15,17)
+        assertEquals(expected, main.numbAverage(test))
+    }
 }
