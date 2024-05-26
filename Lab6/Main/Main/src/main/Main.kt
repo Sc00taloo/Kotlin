@@ -46,6 +46,60 @@ class Main{
         }
     }
 
+    //3.2
+    fun minIndex(array: IntArray): Int = minIndexx(array, array.first(), 0, 0)
+    fun minIndexx(array: IntArray, a: Int, ind: Int, currentInd: Int): Int =
+        if ((array.size) == currentInd) ind
+        else if (a > array[currentInd]) minIndexx(array, array[currentInd], currentInd, currentInd + 1)
+        else minIndexx(array, a, ind, currentInd + 1)
+
+    //3.11
+    fun uniq(array: IntArray): Int {
+        val grouped = array.groupBy { it }
+        val uniqueElement = grouped.entries.find { it.value.size == 1 }?.key
+        return uniqueElement ?: throw IllegalArgumentException("Нет уникальных")
+    }
+
+    //3.23
+    fun twoMin(array: IntArray): Pair<Int, Int> = twoMinn(array, Int.MAX_VALUE, Int.MAX_VALUE, 0)
+    fun twoMinn(array: IntArray, min1: Int, min2: Int, index: Int): Pair<Int, Int> =
+        if ((array.size) == index) Pair(min1, min2)
+        else if (array[index] < min1) twoMinn(array, array[index], min1, index+1)
+        else if (array[index] < min2) twoMinn(array, min1, array[index], index+1)
+        else twoMinn(array, min1, min2, index+1)
+
+    //3.17
+    fun minMaxSwap(array: IntArray): IntArray{
+        val min = array.min()
+        val max = array.max()
+        val minIndex = array.indexOfFirst { it == min }
+        val maxIndex = array.indexOfFirst { it == max }
+        array[minIndex] = max
+        array[maxIndex] = min
+        return array
+    }
+
+    //3.31
+    fun chetEl(array: IntArray): Int = chetEll(array, 0)
+    fun chetEll(array: IntArray, index: Int): Int =
+        if ((array.size) == index) 0
+        else if (array[index] % 2 == 0) 1 + chetEll(array, index+1)
+        else chetEll(array, index+1)
+
+    //3.28
+    fun betweenMax(array: IntArray): List<Int> {
+        val max = array.max()
+        val firstMaxIndex = array.indexOfFirst { it == max }
+        val lastMaxIndex = array.indexOfLast { it == max }
+
+        return if (firstMaxIndex == lastMaxIndex) {
+            emptyList()
+        } else {
+            array.slice((firstMaxIndex + 1) until lastMaxIndex)
+        }
+    }
+
+
     fun main() {
         val list = listOf(1, 4, 9, 16, 20, 25, 30)
         val count = countSquares(list)
@@ -56,6 +110,30 @@ class Main{
         val ci = listOf(6,1,8,2,11,2,7)
         val result = createTupleList(ai, bi, ci)
         println(result)
+
+        val test = intArrayOf(4,1,2,6,3,1,2)
+        val result1 = minIndex(test)
+        println(result1)
+
+        val test2 = intArrayOf(1,1,2,6,2,1,2)
+        val result2 = uniq(test2)
+        println(result2)
+
+        val test3 = intArrayOf(6,7,8,4,3,2,7,1,3,8,3,1)
+        val result3 = twoMin(test3)
+        println(result3)
+
+        val test4 = intArrayOf(4,3,1,5,6,3,6,9,6,3)
+        val result4 = minMaxSwap(test4)
+        println(result4.joinToString())
+
+        val test5 = intArrayOf(1,2,3,4,5,6,7,8,9)
+        val result5 = chetEl(test5)
+        println(result5)
+
+        val test6 = intArrayOf(2,3,9,4,1,3,6,9,1,4,2)
+        val result6 = betweenMax(test6)
+        println(result6)
     }
 
 }
