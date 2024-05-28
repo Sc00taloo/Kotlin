@@ -106,4 +106,38 @@ internal class Test {
         val test = listOf(2,3,5,8,11,12,15,17)
         assertEquals(expected, main.numbAverage(test))
     }
+
+    @Test
+    fun fiveKortez() {
+        val main = Main()
+        val expected = listOf(
+            listOf(1,2,3,4,6,9,12),
+            listOf(1,2,3,4),
+            listOf(1,4,9,16),
+            listOf(1,4,9),
+            listOf(1,2,3,4,1,4,9,16,1,4,9)
+        )
+        val test = listOf(1,2,3,4,6,8,9,12,18,24,27)
+        assertEquals(expected, main.fiveKortez(test))
+    }
+
+    @Test
+    fun calculateP() {
+        val main = Main()
+        val expected = listOf(12,8,6,14,18,15,21,24)
+        val test = listOf(12,15,8,6,14,21,18,24)
+        assertEquals(expected, main.calculateP(test))
+    }
+
+    @Test
+    fun threeKortez() {
+        val main = Main()
+        val expected = listOf(
+            listOf(4,1,8),
+            listOf(8,5,7),
+            listOf(16,13,6)
+        )
+        val test = listOf(1,4,8,16,25,36,49,64,81,256)
+        assertEquals(expected, main.threeKortez(test))
+    }
 }

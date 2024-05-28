@@ -3,13 +3,15 @@ import java.util.*
 import kotlin.math.sqrt
 
 class Main{
-    //2.1
+    //2.1 функция, которая для данного списка указывает, сколько элементов из
+    //него могут быть квадратом какого-то из элементов списка.
     fun countSquares(num: List<Int>): Int {
         val squares = num.map { it * it }
         return num.count { it in squares }
     }
 
-    //2.2
+    //2.2 функция, которая по трем спискам составляет список, состоящий из
+    //кортежей длины 3, где каждый кортеж (ai,bi,ci) с номером I
     fun createTupleList(list1: List<Int>, list2: List<Int>, list3: List<Int>): List<Triple<Int, Int, Int>> {
         val sortedList1 = list1.sorted().reversed()
         val sortedList2 = sum(list2).sorted()
@@ -104,21 +106,21 @@ class Main{
     }
 
 
-    //5.38 Дан целочисленный массив и отрезок a..b. Необходимо найти количество
+    //6.38 Дан целочисленный массив и отрезок a..b. Необходимо найти количество
     //элементов, значение которых принадлежит этому отрезку.
     fun numbAB(array: IntArray, a: Int, b: Int): Int = array.filter { it in a..b }.size
 
-    //5.43 Дан целочисленный массив. Необходимо найти количество минимальных
+    //6.43 Дан целочисленный массив. Необходимо найти количество минимальных
     //элементов.
     fun numbMin(array: IntArray): Int = numbMinn(array, array.min())
     fun numbMinn(array: IntArray, min: Int): Int = array.count { it == min }
 
-    //5.53 Для введенного списка построить новый с элементами, большими, чем среднее
+    //6.53 Для введенного списка построить новый с элементами, большими, чем среднее
     //арифметическое списка, но меньшими, чем его максимальное значение.
     fun averageMax(list: List<Int>): List<Int> = averageMaxx(list, list.average(), list.max())
     fun averageMaxx(list: List<Int>, ave: Double, max: Int): List<Int> = list.filter {it > ave && it < max}
 
-    //5.56 Для введенного списка посчитать среднее арифметическое непростых элементов,
+    //6.56 Для введенного списка посчитать среднее арифметическое непростых элементов,
     //которые больше, чем среднее арифметическое простых.
     fun numbAverage(list: List<Int>): Double = numbAveragee(list, list.filter{isPrime(it,2)}.average())
     fun numbAveragee(list: List<Int>, ave: Double): Double = list.filter{!isPrime(it, 2)}.filter{it > ave}.average()
@@ -129,6 +131,75 @@ class Main{
         else if (n % k == 0) false
         else isPrime(n,k+1)
 
+
+    data class Tuple5<A, B, C, D, E>(val first: A, val second: B, val third: C, val fourth: D, val fifth: E){
+        fun toList(): List<List<Int>> = listOf(
+            first as List<Int>,
+            second as List<Int>,
+            third as List<Int>,
+            fourth as List<Int>,
+            fifth as List<Int>
+        )
+    }
+    //7.2 Дан список, построить кортеж, содержащий пять списков
+    fun fiveKortez(list: List<Int>): List<List<Int>> {
+        val result = fiveKortezz(list)
+        return result.toList()
+    }
+    fun fiveKortezz(list: List<Int>): Tuple5<List<Int>, List<Int>, List<Int>, List<Int>, List<Int>> {
+        val firstList = list.filter { it % 2 == 0 }.map { it / 2 }
+        val secondList = firstList.filter { it % 3 == 0 }.map { it / 3 }
+        val thirdList = secondList.map { it * it }
+        val fourthList = thirdList.filter { firstList.contains(it) }
+        val fifthList = secondList + thirdList + fourthList
+        return Tuple5(firstList, secondList, thirdList, fourthList, fifthList)
+    }
+
+    //7.7 для введенного списка построить новый список, который получен из начального упорядочиванием по параметру P(a)
+    fun calculateP(list: List<Int>): List<Int>{
+        return list.sortedBy { calculatePP(it, list) }
+    }
+    fun calculatePP(a: Int, list: List<Int>): Int {
+        val evenPositionDivisors = list.filterIndexed { index, _ -> index % 2 == 1 }
+            .flatMap { getDivisors(it) }.toSet()
+        val average = list.average()
+        val belowAverageDivisors = list.filter { it < average }.flatMap { getDivisors(it) }.toSet()
+        return getDivisors(a).filter { it in evenPositionDivisors && it !in belowAverageDivisors }.sum()
+    }
+    fun getDivisors(number: Int): List<Int> {
+        return (1..number).filter { number % it == 0 }
+    }
+
+    data class Result(val number: Int, val sum: Int, val count: Int)
+    //7.9 Дан список, в итоговый список включить кортеж (число, сумма предыдущих, количество элементов в
+    //списке больше заданного)
+    fun threeKortez(list: List<Int>): List<List<Int>> {
+        val result = buildNewList(list)
+        return result.map { listOf(it.number, it.sum, it.count) }
+    }
+    fun buildNewList(list: List<Int>): List<Result> {
+        // Список с кумулятивными суммами
+        val cumulativeSums = list.runningFold(0) { acc, i -> acc + i }.drop(1)
+        // Функция для проверки, является ли число полным квадратом любого элемента в списке
+        fun isPerfectSquare(number: Int, list: List<Int>): Boolean {
+            return list.any { it == number * number }
+        }
+        // Функция для проверки, делится ли число на все предыдущие элементы списка
+        fun isDivisibleByAll(number: Int, previousElements: List<Int>): Boolean {
+            return previousElements.all { number % it == 0 }
+        }
+        return list.drop(1).mapIndexed { index, number ->
+                val sumPrevious = cumulativeSums[index]
+                val previousElements = list.take(index + 1)
+                if (number > sumPrevious && isPerfectSquare(number, list) && isDivisibleByAll(number, previousElements)) {
+                    val countGreaterThan = list.count { it > number }
+                    Result(number, sumPrevious, countGreaterThan)
+                }
+                else {
+                    null
+                }
+        }.filterNotNull()
+    }
 
     fun main() {
         val list = listOf(1, 4, 9, 16, 20, 25, 30)
@@ -182,6 +253,18 @@ class Main{
         val test10 = listOf(2,3,5,8,11,12,15,17)
         val result10 = numbAverage(test10)
         println(result10)
+
+        val test11 = listOf(1,2,3,4,6,8,9,12,18,24,27)
+        val result11 = fiveKortez(test11)
+        println(result11)
+
+        val test12 = listOf(12,15,8,6,14,21,18,24)
+        val result12 = calculateP(test12)
+        println(result12)
+
+        val test13 = listOf(1,4,8,16,25,36,49,64,81,256)
+        val result13 = threeKortez(test13)
+        println(result13)
     }
 
 }

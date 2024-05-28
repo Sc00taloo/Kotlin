@@ -16,12 +16,14 @@ class VeniclePass(val name: String,val series: String, val number: String, val i
         require(validateDate(issueDate)) { "Invalid date format" }
     }
 
+    //Функция equals проверяет равенство объектов VeniclePass по значениям их свойств series, number и issueDate.
     override fun equals(other: Any?): Boolean = if (other is VeniclePass) {
         (series == other.series) &&
         (number == other.number) &&
         (issueDate == other.issueDate)
     } else false
 
+    //Функция compareTo используется для сравнения двух объектов VeniclePass: name, series, number и issueDate.
     override fun compareTo(other: VeniclePass): Int {
         return compareValuesBy(
             this, other,

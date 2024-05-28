@@ -40,8 +40,7 @@ public class Main {
             i.write();
         }
 
-        TreeSet<VehiclePassport> seriesNumberSortedSet = new TreeSet<>(Comparator.comparing(VehiclePassport::getSeries)
-                .thenComparing(VehiclePassport::getNumber));
+        TreeSet<VehiclePassport> seriesNumberSortedSet = new TreeSet<>(Comparator.comparing(VehiclePassport::getSeries).thenComparing(VehiclePassport::getNumber));
         seriesNumberSortedSet.addAll(m);
         System.out.println("Сортировка по серии и номеру:");
         for (VehiclePassport i : seriesNumberSortedSet) {
